@@ -1,0 +1,42 @@
+version: '3'
+services:
+  rag_backend:
+    build:
+      dockerfile: Dockerfile
+    container_name: retrieval-augmented-generation
+    image: etrieval-augmented-generation:latest
+    ports:
+      - 1025:1025
+    restart: unless-stopped
+    networks:
+      - rag_network
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_NAME=rag_test
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    container_name: rag-test
+    environment:
+      - POSTGRES_DB=rag_test
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - postgresql://postgres:postgres@localhost:5432/rag_test
+    ports:
+      - 5432:5432
+    volumes:
+        - rag-test-volume:/var/lib/postgresql/data
+
+volumes:
+  rag-test-volume:
+
+
+networks:
+  rag_network:
+    # external: true

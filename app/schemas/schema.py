@@ -1,0 +1,1 @@
+# Common schema pydantic validation for all the apps
